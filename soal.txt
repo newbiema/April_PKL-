@@ -1,0 +1,239 @@
+Pertanyaan: Kota manakah yang dikenal sebagai "Kota Pahlawan" di Indonesia?
+A: Jakarta
+B: Surabaya
+C: Bandung
+D: Yogyakarta
+Jawaban: B
+Gambar: images/surabaya.png
+
+Pertanyaan: Siapa penemu lampu pijar?
+A: Nikola Tesla
+B: Alexander Graham Bell
+C: Thomas Alva Edison
+D: Albert Einstein
+Jawaban: C
+Gambar: images/edison.png
+
+Pertanyaan: Planet apa yang dikenal sebagai "Planet Merah"?
+A: Venus
+B: Mars
+C: Jupiter
+D: Saturnus
+Jawaban: B
+Gambar: images/mars.png
+
+Pertanyaan: Apa nama ibu kota Australia?
+A: Sydney
+B: Canberra
+C: Melbourne
+D: Brisbane
+Jawaban: B
+Gambar: images/canberra.png
+
+Pertanyaan: Hewan apa yang dikenal sebagai mamalia terbesar di dunia?
+A: Gajah Afrika
+B: Paus Biru
+C: Hiu Paus
+D: Rusa Kutub
+Jawaban: B
+Gambar: images/paus_biru.png
+
+Pertanyaan: Siapa Presiden pertama Republik Indonesia?
+A: Soeharto
+B: Sukarno
+C: B.J. Habibie
+D: Megawati
+Jawaban: B
+Gambar: images/sukarno.png
+
+Pertanyaan: Apa simbol kimia untuk emas?
+A: Ag
+B: Au
+C: Fe
+D: Hg
+Jawaban: B
+Gambar: images/emas.png
+
+Pertanyaan: Apa nama gunung tertinggi di dunia?
+A: Kilimanjaro
+B: K2
+C: Everest
+D: Denali
+Jawaban: C
+Gambar: images/everest.png
+
+Pertanyaan: Lagu kebangsaan Indonesia adalah?
+A: Indonesia Tanah Airku
+B: Indonesia Pusaka
+C: Indonesia Raya
+D: Garuda Pancasila
+Jawaban: C
+Gambar: images/indonesia_raya.png
+
+Pertanyaan: Siapa yang dikenal sebagai penulis novel "Harry Potter"?
+A: Suzanne Collins
+B: J.K. Rowling
+C: Stephenie Meyer
+D: George R.R. Martin
+Jawaban: B
+Gambar: images/jk_rowling.png
+
+Pertanyaan: Apa nama sungai terpanjang di dunia?
+A: Amazon
+B: Nil
+C: Yangtze
+D: Mississippi
+Jawaban: B
+Gambar: images/nil.png
+
+Pertanyaan: Hewan apa yang memiliki ciri khas leher panjang?
+A: Zebra
+B: Jerapah
+C: Rusa
+D: Kuda
+Jawaban: B
+Gambar: images/jerapah.png
+
+Pertanyaan: Apa nama mata uang Jepang?
+A: Won
+B: Yuan
+C: Yen
+D: Ringgit
+Jawaban: C
+Gambar: images/yen.png
+
+Pertanyaan: Dalam olahraga sepak bola, berapa jumlah pemain dalam satu tim di lapangan?
+A: 9
+B: 10
+C: 11
+D: 12
+Jawaban: C
+Gambar: images/sepakbola.png
+
+Pertanyaan: Apa nama samudra terbesar di dunia?
+A: Atlantik
+B: Hindia
+C: Pasifik
+D: Arktik
+Jawaban: C
+Gambar: images/pasifik.png
+
+Pertanyaan: Siapa penemu telepon?
+A: Nikola Tesla
+B: Thomas Edison
+C: Alexander Graham Bell
+D: Guglielmo Marconi
+Jawaban: C
+Gambar: images/bell.png
+
+Pertanyaan: Apa nama gas yang kita hirup untuk bernapas?
+A: Karbon Dioksida
+B: Oksigen
+C: Nitrogen
+D: Hidrogen
+Jawaban: B
+Gambar: images/oksigen.png
+
+Pertanyaan: Negara mana yang dikenal sebagai "Negeri Tirai Bambu"?
+A: Korea Selatan
+B: Jepang
+C: Cina
+D: Vietnam
+Jawaban: C
+Gambar: images/cina.png
+
+Pertanyaan: Hewan apa yang menjadi lambang negara Indonesia?
+A: Harimau
+B: Komodo
+C: Burung Garuda
+D: Gajah
+Jawaban: C
+Gambar: images/garuda.png
+
+Pertanyaan: Siapa yang menciptakan teori relativitas?
+A: Isaac Newton
+B: Galileo Galilei
+C: Albert Einstein
+D: Marie Curie
+Jawaban: C
+Gambar: images/einstein.png
+
+Pertanyaan: Apa nama benua terkecil di dunia?
+A: Afrika
+B: Eropa
+C: Australia
+D: Amerika Selatan
+Jawaban: C
+Gambar: images/australia.png
+
+Pertanyaan: Apa nama ibu kota Thailand?
+A: Bangkok
+B: Hanoi
+C: Phnom Penh
+D: Kuala Lumpur
+Jawaban: A
+Gambar: images/bangkok.png
+
+Pertanyaan: Apa nama zat yang memberikan warna hijau pada tumbuhan?
+A: Hemoglobin
+B: Melanin
+C: Klorofil
+D: Karoten
+Jawaban: C
+Gambar: images/klorofil.png
+
+Pertanyaan: Hewan apa yang dikenal sebagai "Raja Hutan"?
+A: Harimau
+B: Singa
+C: Serigala
+D: Elang
+Jawaban: B
+Gambar: images/singa.png
+
+Pertanyaan: Apa nama festival tahunan yang terkenal di Brasil?
+A: Mardi Gras
+B: Karnaval Rio
+C: Oktoberfest
+D: Holi
+Jawaban: B
+Gambar: images/karnaval_rio.png
+
+Pertanyaan: Siapa pelukis terkenal dari lukisan "Mona Lisa"?
+A: Vincent van Gogh
+B: Leonardo da Vinci
+C: Pablo Picasso
+D: Michelangelo
+Jawaban: B
+Gambar: images/da_vinci.png
+
+Pertanyaan: Planet terbesar dalam tata surya adalah?
+A: Mars
+B: Bumi
+C: Saturnus
+D: Jupiter
+Jawaban: D
+Gambar: images/jupiter.png
+
+Pertanyaan: Di negara mana Menara Eiffel berada?
+A: Inggris
+B: Prancis
+C: Italia
+D: Jerman
+Jawaban: B
+Gambar: images/eiffel.png
+
+Pertanyaan: Apa nama senyawa kimia dengan rumus H2O?
+A: Karbon Dioksida
+B: Hidrogen Peroksida
+C: Air
+D: Asam Sulfat
+Jawaban: C
+Gambar: images/air.png
+
+Pertanyaan: Negara mana yang memiliki piramida terkenal?
+A: Mesir
+B: Yunani
+C: India
+D: Cina
+Jawaban: A
+Gambar: images/mesir.png
