@@ -14,24 +14,38 @@ if (!isset($_SESSION['jawaban_user']) || empty($_SESSION['jawaban_user'])) {
     exit;
 }
 
-$totalSoal = $conn->query("SELECT COUNT(*) AS total FROM soal")->fetch_assoc()['total'];
+$totalSoal = count($_SESSION['soal_ids']);
 $correctAnswers = 0;
 
-foreach ($_SESSION['jawaban_user'] as $soalId => $jawabanUser) {
-    // Mengambil data soal dari database
-    $query = $conn->query("SELECT jawaban FROM soal WHERE id = $soalId");
+// Loop soal berdasarkan urutan di $_SESSION['soal_ids']
+$daftarHasil = [];
+foreach ($_SESSION['soal_ids'] as $index => $soalId) {
+    $query = $conn->query("SELECT * FROM soal WHERE id = $soalId");
 
-    // Pastikan query berhasil
     if ($query && $query->num_rows > 0) {
         $soal = $query->fetch_assoc();
-        
-        // Perbandingan jawaban yang diinputkan dengan jawaban yang benar (case-insensitive)
-        if (strtoupper($jawabanUser) === strtoupper($soal['jawaban'])) {
+        $jawabanUser = $_SESSION['jawaban_user'][$index] ?? null; // Jawaban pengguna
+        $jawabanBenar = $soal['jawaban']; // Jawaban benar dari database
+        $opsi = [
+            'A' => $soal['opsi_a'],
+            'B' => $soal['opsi_b'],
+            'C' => $soal['opsi_c'],
+            'D' => $soal['opsi_d']
+        ];
+
+        // Hitung jawaban benar
+        if ($jawabanUser && strtoupper($jawabanUser) === strtoupper($jawabanBenar)) {
             $correctAnswers++;
         }
-    } else {
-        // Skip jika soal tidak ditemukan
-        continue;
+
+        // Tambahkan ke daftar hasil
+        $daftarHasil[] = [
+            'pertanyaan' => $soal['pertanyaan'],
+            'jawaban_user' => $jawabanUser,
+            'jawaban_benar' => $jawabanBenar,
+            'opsi' => $opsi,
+            'gambar' => $soal['gambar']
+        ];
     }
 }
 
@@ -48,7 +62,7 @@ $score = ($correctAnswers / $totalSoal) * 100;
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen flex items-center justify-center">
-    <div class="bg-white shadow-2xl rounded-xl p-8 w-11/12 sm:w-2/3 lg:w-1/2 transition-all transform hover:scale-105">
+    <div class="bg-white shadow-2xl rounded-xl p-8 w-11/12 sm:w-2/3 lg:w-1/2 transition-all transform">
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-5xl font-extrabold text-pink-600 mb-6">Hasil Kuis</h1>
@@ -72,32 +86,32 @@ $score = ($correctAnswers / $totalSoal) * 100;
         <div class="mb-10">
             <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Daftar Jawaban Anda</h2>
             <div class="space-y-6">
-                <?php foreach ($_SESSION['jawaban_user'] as $soalId => $jawabanUser): ?>
-                    <?php
-                    $query = $conn->query("SELECT * FROM soal WHERE id = $soalId");
-                    if ($query && $query->num_rows > 0) {
-                        $soal = $query->fetch_assoc();
-                        $jawabanBenar = $soal['jawaban'];
-                    } else {
-                        continue;
-                    }
-                    ?>
-                    <div class="p-6 bg-white border border-gray-300 shadow-lg rounded-lg flex justify-between items-center">
+                <?php foreach ($daftarHasil as $hasil): ?>
+                    <div class="p-6 bg-white border border-gray-300 shadow-lg rounded-lg">
                         <div>
-                            <p class="font-semibold text-gray-800"><?= htmlspecialchars($soal['pertanyaan']) ?></p>
-                            <p class="text-sm text-gray-500">Jawaban Anda: 
-                                <span class="<?= strtoupper($jawabanUser) === strtoupper($jawabanBenar) ? 'text-green-500' : 'text-red-500' ?>">
-                                    <?= strtoupper($jawabanUser) ?>
+                            <p class="font-semibold text-gray-800"><?= htmlspecialchars($hasil['pertanyaan']) ?></p>
+                            <?php if (!empty($hasil['gambar'])): ?>
+                                <div class="mt-2">
+                                    <img src="<?= htmlspecialchars($hasil['gambar']) ?>" alt="Gambar Soal" class="rounded-md shadow-md">
+                                </div>
+                            <?php endif; ?>
+
+                            <p class="mt-3 text-sm text-gray-700">
+                                <strong>Opsi Jawaban:</strong><br>
+                                A. <?= htmlspecialchars($hasil['opsi']['A']) ?><br>
+                                B. <?= htmlspecialchars($hasil['opsi']['B']) ?><br>
+                                C. <?= htmlspecialchars($hasil['opsi']['C']) ?><br>
+                                D. <?= htmlspecialchars($hasil['opsi']['D']) ?>
+                            </p>
+
+                            <p class="mt-2 text-sm text-gray-500">Jawaban Anda: 
+                                <span class="<?= strtoupper($hasil['jawaban_user']) === strtoupper($hasil['jawaban_benar']) ? 'text-green-500' : 'text-red-500' ?>">
+                                    <?= strtoupper($hasil['jawaban_user'] ?? '-') ?>
                                 </span>
                             </p>
                             <p class="text-sm text-gray-500">Jawaban Benar: 
-                                <span class="text-green-500"><?= strtoupper($jawabanBenar) ?></span>
+                                <span class="text-green-500"><?= strtoupper($hasil['jawaban_benar']) ?>. <?= htmlspecialchars($hasil['opsi'][$hasil['jawaban_benar']]) ?></span>
                             </p>
-                        </div>
-                        <div class="ml-4">
-                            <span class="inline-block w-10 h-10 flex items-center justify-center rounded-full <?= strtoupper($jawabanUser) === strtoupper($jawabanBenar) ? 'bg-green-500' : 'bg-red-500' ?> text-white text-lg font-bold">
-                                <?= strtoupper($jawabanUser) === strtoupper($jawabanBenar) ? '✔' : '✘' ?>
-                            </span>
                         </div>
                     </div>
                 <?php endforeach; ?>

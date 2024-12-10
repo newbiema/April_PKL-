@@ -41,6 +41,7 @@ function loadSoal($conn, $filename = 'soal.txt') {
             $stmtCheck->store_result();
 
             if ($stmtCheck->num_rows === 0) {
+                $answerUpper = strtoupper($answer);
                 $stmtInsert = $conn->prepare("INSERT INTO soal (pertanyaan, opsi_a, opsi_b, opsi_c, opsi_d, jawaban, gambar) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 $stmtInsert->bind_param(
                     "sssssss",
@@ -49,16 +50,30 @@ function loadSoal($conn, $filename = 'soal.txt') {
                     $options['B'],
                     $options['C'],
                     $options['D'],
-                    strtoupper($answer),
+                    $answerUpper,
                     $gambar
                 );
                 $stmtInsert->execute();
+            } else {
+                $answerUpper = strtoupper($answer);
+                $stmtUpdate = $conn->prepare("UPDATE soal SET opsi_a = ?, opsi_b = ?, opsi_c = ?, opsi_d = ?, jawaban = ?, gambar = ? WHERE pertanyaan = ?");
+                $stmtUpdate->bind_param(
+                    "sssssss",
+                    $options['A'],
+                    $options['B'],
+                    $options['C'],
+                    $options['D'],
+                    $answerUpper,
+                    $gambar,
+                    $question
+                );
+                $stmtUpdate->execute();
             }
         }
     }
 }
 
-// Jalankan loadSoal sekali (jika perlu, bisa dihapus setelah selesai digunakan)
+// Jalankan loadSoal sekali
 loadSoal($conn);
 
 // Randomisasi soal jika sesi baru dimulai
@@ -85,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isset($_POST['prev'])) {
         $_SESSION['current_soal'] = max($_SESSION['current_soal'] - 1, 0);
     } elseif (isset($_POST['finish'])) {
-        header('Location: result.php'); // Pengalihan setelah selesai
+        header('Location: result.php');
         exit;
     } elseif (isset($_POST['reset'])) {
         session_destroy();
@@ -103,7 +118,7 @@ if ($currentId) {
     $soal = $query->fetch_assoc();
 }
 
-// Navigasi soal berdasarkan GET (jika nomor soal dipilih langsung)
+// Navigasi soal berdasarkan GET
 if (isset($_GET['soal'])) {
     $newSoal = (int) $_GET['soal'];
     if ($newSoal >= 0 && $newSoal < count($_SESSION['soal_ids'])) {
@@ -129,7 +144,6 @@ if (isset($_GET['soal'])) {
     </style>
 </head>
 <body class="bg-gradient-to-r from-blue-50 to-green-50 min-h-screen flex flex-col">
-    <!-- Navbar -->
     <header class="bg-blue-600 shadow-lg text-white py-4">
         <div class="container mx-auto flex justify-between items-center px-4">
             <h1 class="text-2xl font-bold">Kuis Pilihan Ganda</h1>
@@ -137,9 +151,7 @@ if (isset($_GET['soal'])) {
         </div>
     </header>
 
-    <!-- Main Container -->
     <div class="container mx-auto mt-6 px-4 flex flex-col lg:flex-row gap-8">
-        <!-- Navigation Sidebar -->
         <div class="bg-white shadow-md rounded-lg p-4 lg:w-1/4">
             <h2 class="text-lg font-semibold mb-4">Navigasi Soal</h2>
             <div class="grid grid-cols-5 gap-2">
@@ -152,9 +164,14 @@ if (isset($_GET['soal'])) {
                     </a>
                 <?php endfor; ?>
             </div>
+            <form method="POST" class="mt-4">
+                <button type="submit" name="reset" onclick="return confirmReset();" 
+                        class="px-4 py-2 bg-red-600 text-white w-full rounded-md hover:bg-red-700">
+                    Reset Kuis
+                </button>
+            </form>
         </div>
 
-        <!-- Question Section -->
         <div class="bg-white shadow-md rounded-lg p-6 lg:w-3/4">
             <?php if (isset($soal)): ?>
                 <?php if (!empty($soal['gambar'])): ?>
@@ -170,38 +187,56 @@ if (isset($_GET['soal'])) {
                             <input type="radio" name="jawaban" value="<?= strtoupper($opsi) ?>" 
                                 <?= (isset($_SESSION['jawaban_user'][$currentIndex]) && $_SESSION['jawaban_user'][$currentIndex] === strtoupper($opsi)) ? 'checked' : '' ?> 
                                 class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                            <span class="text-gray-600"><?= strtoupper($opsi) ?>. <?= $soal["opsi_$opsi"] ?></span>
+                            <span class="text-gray-700"><?= $soal["opsi_{$opsi}"] ?></span>
                         </label>
                     <?php endforeach; ?>
 
-                    <!-- Buttons -->
-                    <div class="flex justify-between mt-6">
-                        <button type="submit" name="prev" 
-                                class="px-6 py-2 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed" 
-                                <?= $currentIndex == 0 ? 'disabled' : '' ?>>
-                            Sebelumnya
-                        </button>
-                        <?php if ($currentIndex < count($_SESSION['soal_ids']) - 1): ?>
-                            <button type="submit" name="next" 
-                                    class="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
-                                Selanjutnya
-                            </button>
-                        <?php else: ?>
-                            <button type="submit" name="finish" 
-                                    class="px-6 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600">
-                                Selesai
-                            </button>
-                        <?php endif; ?>
-                        <button type="submit" name="reset" 
-                                class="px-6 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">
-                            Reset
-                        </button>
+                    <div class="flex justify-between items-center">
+                        <button type="submit" name="prev" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">Sebelumnya</button>
+                        <div>
+                            <?php if ($currentIndex < count($_SESSION['soal_ids']) - 1): ?>
+                                <button type="submit" name="next" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Berikutnya</button>
+                            <?php endif; ?>
+                            <?php if ($currentIndex === count($_SESSION['soal_ids']) - 1): ?>
+                                <button type="submit" name="finish" onclick="return confirmFinish(<?= count($_SESSION['soal_ids']) ?>);" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Selesai</button>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </form>
+            <?php else: ?>
+                <p class="text-red-500">Soal tidak ditemukan.</p>
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+        const radioButtons = document.querySelectorAll('input[name="jawaban"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                const selectedValue = radio.value;
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'update_jawaban.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send(`jawaban=${selectedValue}&current_soal=<?= $currentIndex ?>`);
+            });
+        });
+
+        function confirmFinish(totalSoal) {
+            const jawaban = <?= json_encode($_SESSION['jawaban_user'] ?? []) ?>;
+            const unanswered = [];
+            for (let i = 0; i < totalSoal; i++) {
+                if (!jawaban[i]) unanswered.push(i + 1);
+            }
+            if (unanswered.length > 0) {
+                alert("Anda belum menjawab soal nomor: " + unanswered.join(", "));
+                return false;
+            }
+            return confirm("Apakah Anda yakin ingin menyelesaikan kuis?");
+        }
+
+        function confirmReset() {
+            return confirm("Apakah Anda yakin ingin mengatur ulang kuis?");
+        }
+    </script>
 </body>
 </html>
-
-
